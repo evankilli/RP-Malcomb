@@ -45,7 +45,7 @@ The replication study will use R.
 
 ## Materials and Procedure
 
-The following procedure was created without accessing the data for this study first.
+The first procedure below was created without accessing the data for this study first. The second was created after investigating the data and its sources.
 
 ### Data
 2004 - 2010 DHS w/ GPS
@@ -53,7 +53,8 @@ Demographic and health survey (assets & access)
 UNEP/grid Europe (biophysical exposure)
 Famine early warning network (livelihood)
 
-### Preprocessing of Geographic Boundaries (Step 1)
+### Procedure 1
+#### Step 1: Preprocessing of Geographic Boundaries
 2004-2010 DHS data points (for each village surveyed): District → ***disaggregated*** → villages → ***disaggregated*** → traditional authorities
 
 DHS Households table (1 row/house) → ***field calc*** → conversion to 0-5 scale → weighted A/C score → ***join by attribute*** w/ DHS data points (village level) → ***spatial join AND group*** w/ traditional authorities (GADM adm_2) → traditional authorities w/ Capacity Score → ***Raster***
@@ -64,11 +65,38 @@ Drought exposure → ***rescale 0-5***
 
 Flood risk → ***rescale 0-5***
 
-### Step 2
+#### Step 2: Weighting
 Data Input: UNEP/grid Europe, Famine early warning network → ***Raster*** → ***Weight values***: All vulnerability measures were weighted (table 2) and normalized between 0 & 5 (RStudio)
 
-### Step 3: Creating the Model of Vulnerability
+#### Step 3: Creating the Model of Vulnerability
 ***Calculate***: Household resilience = adaptive capacity + livelihood sensitivity - biophysical exposure
+
+### Procedure 2
+1. Data Preprocessing:
+  1. Download traditional authorities: MWI_adm2.shp
+1. Adding TA and LZ ids to DHS clusters
+1. Removing HH entries with invalid or unknown values
+1. Aggregating HH data to DHA clusters, and then joining to traditional authorities to get: ta_capacity_2010
+1. Removing index and livestock values that were NA
+1. Sum of Livestock by HH
+1. Scale adaptive capacity fields (from DHS data) on scale of 1 - 5 to match Malcomb et al.
+1. Weight capacity based on table 2 in Malcomb et al.
+  1. Calculate capacity by summing all weighted capacity fields
+1. Summarize capacity from households to traditional authorities
+1. Joining mean capacities to TA polygon layer
+1. Making capacity score resemble Malcomb et al's work (scores on range of 0-20) by multiplying capacity score by 20
+1. Categorizing capacities using natural jenks methods
+1. Creating blank raster and setting extent of Malawi - CRS: 4326
+1. Reproject, clip and resampling flood risk and drought exposure rasters to new extent and cell size
+  1. Uses bilinear resampling for drought to average continuous population exposure values
+  1. Uses nearest neighbor resampling for flood risk to preserve integer values
+  1. Removing factors and recasting them as integers
+  1. Clipping TAs with LZs to remove lake
+  1. Rasterizing final TA capacity layer
+1. Masking flood and drought layers
+1. Reclassify drought raster into quantiles
+1. Add all RASTERs together to calculate final output:  final = (40 - geo) * 0.40 + drought * 0.20 + flood * 0.20
+1. Using zonal statistics to aggregate raster to TA geometry for final calculation of vulnerability in each traditional authority 
 
 
 
