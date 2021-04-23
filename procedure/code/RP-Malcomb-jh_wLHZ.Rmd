@@ -100,8 +100,7 @@ ta = read_sf(here("data", "raw", "public","traditional_authorities", "MWI_adm2.s
 lhz = read_sf(here("data", "derived", "private", "MW_LHZ_2009_derived.shp")) %>% st_make_valid()
 
 #### adding traditional authority and livelihood zone ids to dhs clusters ####
-dhsclusters_2010 = readRDS(here("data", "raw", "private", "datasets", "MWGE62FL.rds")) %>%
-  as("sf") %>% 
+dhsclusters_2010 = read_sf(here("data", "raw", "private", "datasets", "MWGE62FL", "MWGE62FL.shp"))%>%
   st_transform(3395) %>% 
   # only joining id for traditional authorities and livelihood zones to dhs clusters
   st_join(st_transform(select(ta, ID_2),3395)) %>%
@@ -110,7 +109,7 @@ dhsclusters_2010 = readRDS(here("data", "raw", "private", "datasets", "MWGE62FL.
          lhz_id = FNID,
          urban_rural = URBAN_RURA)
 
-dhshh_2010 = readRDS(here("data", "raw", "private", "datasets", "MWHR61SV.rds")) %>% zap_labels()
+dhshh_2010 = read_sav(here("data", "raw", "private", "datasets", "MWHR61SV", "MWHR61FL.sav")) %>% zap_labels()
 ```
 
 ```{r households to remove (2010)}
@@ -228,12 +227,12 @@ ta_capacity_2010 = dhshh_2010 %>%
 ```
 ```{r calculating 2010 livelihood sensitivity}
 lhzSensitivity = lhz %>% 
-  filter(!is.na(jpctFoodCr)) %>%
+  filter(!is.na(LHZSensi_1)) %>%
   mutate(
-    foodCrops = percent_rank(jpctFoodCr) * 4 + 1, # * 4 + 1 re-scales to match malcomb et al.
-    wageIncome = percent_rank(jpctIncome) * 4 + 1, 
-    disasterCoping = percent_rank(desc(jPctDCS)) * 4 + 1, #because higher income from ecologically destructive practices makes you more vulnerable
-    cashCropInc = percent_rank(desc(jPctIncCas)) * 4 + 1 #because selling cash crops makes you vulnerable to the global economy
+    foodCrops = percent_rank(LHZSensi_1) * 4 + 1, # * 4 + 1 re-scales to match malcomb et al.
+    wageIncome = percent_rank(LHZSensi_2) * 4 + 1, 
+    disasterCoping = percent_rank(desc(LHZSensi_3)) * 4 + 1, #because higher income from ecologically destructive practices makes you more vulnerable
+    cashCropInc = percent_rank(desc(LHZSensi_4)) * 4 + 1 #because selling cash crops makes you vulnerable to the global economy
   ) %>%
   rowwise %>%
   mutate(
