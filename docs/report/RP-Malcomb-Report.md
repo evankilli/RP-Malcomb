@@ -30,13 +30,17 @@ The original study was published without data or code, but has detailed narrativ
 
 ### Data Description and Variables
 
-Outline the data used in the study, including:
+Briefly, the data used for this analysis and the original study came from three sources: USAID's Demographic and Health Survey (DHS), the Famine Early Warning Network (FEWSNET), and the UN Environmental Program (UNEP). All data points were transformed in the original study and our replication to 1-5 scores using the formula (percentage rank) * 4 + 1, with the percentage rank descending or ascending based on . Additionally, a geopackage of traditional authorities - an administrative division in Malawi in between the village level and the high-level, low-resolution district level. The original authors chose this as the level of analysis due to their perception of it as the most useful level for analysis - districts were much to large, there being only 28 for the entire country, whereas villages were less equipped than traditional authorities or districts for later planning to mitigate climate change effects.
+
+The DHS was the largest source of data, providing household level information related to a number of health and socio-economic indicators, including number of children in households, numbers of various kinds of livestock, and access to electricity. This data broadly allowed for the quantifying of the adaptive capacity of households and traditional authorities. This data was broken up into two major sets, "Assets" and "Access." Assets were those indicators, like number of livestock, which quantified the basic economic wellbeing of households, while Access was those indicators quantifying access to resources like electricity, water, etc.. Within the Access set, the authors also included the sex of the head of each household, which may be used as a proxy for access to social capital and other similar resources. This data was then aggregated within the boundaries of each traditional authority and an adaptive capacity score was calculated based on the 1-5 scores created for the DHS data. This was multiplied by 20 in the reproduction to make the range of values produced match the scale of the range of values in the original study. The DHS data was also used without aggregating to the traditional authority level for use in creating the final resilience score alongside the other data, including the scaling to scores of 1-5 and weighting, but without the multiplication by 20.
+
+The FEWSNET data provided a large set of statistics related to livelihood sensitivity. This was calculated at a fairly high level, with Malawi broken up into 19 zones. These zones were created by FEWSNET based on areas that share common farming practices, labor patterns, and environmental coping strategies. This data did need to be pre-processed for analysis, working - in collaboration with [Maddie Tango]("MADDIES WEBSITE"), [Steven Montilla]("STEVENS WEBSITE"), [Jackson Mumper]("JACKSONS WEBSITE"), [ARIELLE LANDAU]("ARIELLES WEBSITE"), and [Sanjana Roy]("SANJANAS WEBSITE") - to classify what figures were drawn upon to calculate the percentage of households' food that came from their own farms, percent of income from wage labor, percentage of labor vulnerable to market shocks, and "ecological destruction associated with livelihood coping strategies," and eventually to manually calculate all four of these figures for each livelihood zone.
+
+Finally, UNEP's data provided two rasters of 1) flood risk and 2) drought risk. No pre-processing needed to be done to this; it was used in its weighted quintile form and added to rasterized versions of the corresponding weighted FEWSNET and DHS data (created during the course of analysis) to create the final vulnerability map.
 
 - sources of each data layer and
 - the variable(s) used from each data source
 - transformations applied to the variables (e.g. rescaling variables, calculating derived variables, aggregating to different geographic units, etc.)
-
-This part may be compiled collaboratively as a group!
 
 ### Analytical Specification
 
@@ -95,12 +99,15 @@ Data Input: UNEP/grid Europe, Famine early warning network → ***Raster*** → 
   1. Rasterizing final TA capacity layer
 1. Masking flood and drought layers
 1. Reclassify drought raster into quantiles
-1. Add all RASTERs together to calculate final output:  final = (40 - geo) * 0.40 + drought * 0.20 + flood * 0.20
-1. Using zonal statistics to aggregate raster to TA geometry for final calculation of vulnerability in each traditional authority 
-
+1. Add all RASTERs together to calculate final output:  final = (40 - geo) * 0.40 + drought * 0.20 + flood * 0.20 + livelihood sensitivity * 20
+1. Using zonal statistics to aggregate raster to TA geometry for final calculation of vulnerability in each traditional authority
 
 
 ## Replication Results
+
+*UNDERCOUNTING RESILIENCE*
+
+*UNDERCOUNTING VULNERABILITY*
 
 For each output from the original study (mainly figure 4 and figure 5), present separately the results of the replication attempt.
 
@@ -115,9 +122,14 @@ Figures to Include:
 
 ## Unplanned Deviations from the Protocol
 
-Summarize changes and uncertainties between
+*Summarize changes and uncertainties between*
 - your interpretation and plan for the workflow based on reading the paper
 - your final workflow after accessing the data and code and completing the code
+
+- rescaling 0-5 then 1-5 --> unclear (quintiles, but also 0-5, but thats 6 classes)
+- multiplying capacity by 20 to match original map scale --> why tho (note this was given initially)
+- livelihood senitivity --> had to decide what data went into calculating 4 scores, paper wasnt clear
+
 
 ## Discussion
 
@@ -126,6 +138,9 @@ Provide a summary and interpretation of the key findings of the replication *vis
 - lack of code
 - lack of details in the original analysis
 - uncertainties due to manner in which data has been used
+
+
+
 
 ## Conclusion
 
