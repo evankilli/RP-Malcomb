@@ -585,4 +585,13 @@ plot(fig5comppts$or, fig5comppts$rp, xlab="Original Study", ylab="Reproduction")
 cor.test(fig5comppts$or, fig5comppts$rp, method="spearman")
 # Spearman's Rho correlation test
 ```
+```{r saving fig 5 comp}
 
+write_stars(fig5comp["diff"], here("data","derived","public","fig5comp.tif"))
+```
+
+```{r saving fig 4 comp}
+
+results2 = here("data","derived","public","fig4comp.gpkg")
+write_sf(fig4compare, results2, "figc4comp")
+```
