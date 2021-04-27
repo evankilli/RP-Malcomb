@@ -36,11 +36,7 @@ The DHS was the largest source of data, providing household level information re
 
 The FEWSNET data provided a large set of statistics related to livelihood sensitivity. This was calculated at a fairly high level, with Malawi broken up into 19 zones. These zones were created by FEWSNET based on areas that share common farming practices, labor patterns, and environmental coping strategies. This data did need to be pre-processed for analysis, working - in collaboration with [Maddie Tango]("MADDIES WEBSITE"), [Steven Montilla]("STEVENS WEBSITE"), [Jackson Mumper]("JACKSONS WEBSITE"), [ARIELLE LANDAU]("ARIELLES WEBSITE"), and [Sanjana Roy]("SANJANAS WEBSITE") - to classify what figures were drawn upon to calculate the percentage of households' food that came from their own farms, percent of income from wage labor, percentage of labor vulnerable to market shocks, and "ecological destruction associated with livelihood coping strategies," and eventually to manually calculate all four of these figures for each livelihood zone.
 
-Finally, UNEP's data provided two rasters of 1) flood risk and 2) drought risk. No pre-processing needed to be done to this; it was used in its weighted quintile form and added to rasterized versions of the corresponding weighted FEWSNET and DHS data (created during the course of analysis) to create the final vulnerability map.
-
-- sources of each data layer and
-- the variable(s) used from each data source
-- transformations applied to the variables (e.g. rescaling variables, calculating derived variables, aggregating to different geographic units, etc.)
+Finally, UNEP's data provided two rasters of 1) flood risk and 2) drought risk. No pre-processing needed to be done to this; it was used in its weighted quintile form - like with both the DHS and FEWSNET data - and added to rasterized versions of the corresponding weighted FEWSNET and DHS data (created during the course of analysis) to create the final vulnerability map.
 
 ### Analytical Specification
 
@@ -105,47 +101,57 @@ Data Input: UNEP/grid Europe, Famine early warning network → ***Raster*** → 
 
 ## Replication Results
 
+### Adaptive Capacity
+
+![Map of Adaptive Capacity in Malawi](RP-Malcomb/results/maps/ac_2010.png)
+
+In reproducing this analysis, we created the above map showing adaptive capacity scores - a figure described above derived only from the DHS "Assets" and "Access" data. Looking at these results, a pattern becomes immediately apparent: the northern "half" of the country for the most part returns consistently higher adaptive capacity scores, with the southern part returning lower scores. In the north, however, an important exception to this trend exists: the shoreline of Lake Malawi, with darker coloring and lower scores. This largely follows the results found by Malcomb et. al. Reasons why this pattern appears are unclear, but the presence of more cities in the south, and thus more arable land per-capita in the north could be a contributing factor.
+
+While general trends did hold, when comparing scores given in the reproduction and analysis, values consistently do not hold up well.
+
+![Map Comparing Adaptive Capacity Scores in the Reproduction and Original Study](RP-Malcomb/results/maps/fig4comp.png)
+
+As shown in the above map, while some traditional authorities' scores - or rather, classes of scores - do hold up, a significant chunk are undercounted by the reproduction analysis, with a whole 108 of 200 traditional authorities with values returned by the reproduction study ending up at least one class, if not two, below the class in the original study, with the remainder split roughly 3:1 returning values of equal class or one class above, respectively.
+
+While very general patterns seem to hold, consistent undercounting on the part of this reproduction implies error on the part of the authors of the original study, or the team that completed this reproduction. In short, the original study was supported *in part* by the reproduction, but the source of divergence will need to be investigated further.
+
+
+### Resilience
 *UNDERCOUNTING RESILIENCE*
 
-*UNDERCOUNTING VULNERABILITY*
+![Map of Vulnerability to Climate Change in Malawi](RP-Malcomb/results/maps/vulnerability.png)
 
-For each output from the original study (mainly figure 4 and figure 5), present separately the results of the replication attempt.
+The map displayed above shows vulnerability to climate change in Malawi, as measured using a combination of the DHS "adaptive capacity" data, FEWSNET's livelihood resilience data, and UNEP's flood and drought maps. Results are somewhat less clear initially than the results for adaptive capacity, but interestingly, the north seems to generally return "better" values in this analysis as well, and the lakeshore returns "worse" values, with higher vulnerability. Interestingly, the south of the country, through which the Shire River flows, returns values generally in the middle of the range, but low risk of drought near water sources could in some areas balance out higher flood risk. The only areas with *high* vulnerability occur in small belts, and largely in the far south of the country.
 
-2.	State whether the original study was or was not supported by the replication
-3.	State whether any hypothesis linked to a planned deviation from the original study was supported. Provide key statistics and related reasoning.
+![Map Comparing Resilience/Vulnerability Scores between This Analysis and the Original Study](RP-Malcomb/results/maps/fig5comp.png)
 
-Figures to Include:
-- map of resilience by traditional authority in 2010, analagous to figure 4 of the original study
-- map of vulnerability in Malawi, analagous to figure 5 of the original study
-- map of difference between your figure 4 and the original figure 4
-- map of difference between your figure 5 and the original figure 5
+Again, divergences do appear between this analysis and the original study, and again, it seems as if this analysis undercounted resilience, resulting in higher vulnerability in much of the map. The above map shows this graphically, with only some small areas of the map showing 0 or positive values - indicating scores greater than or equal to the original study - and most of the map returning higher orange and red values - indicating scores lower than the original study. Like in the section above, this implies some sort of error, but the specifics will need to be investigated further, and while values might not hold well, general trends do - backed up by consistent divergences in one direction -  so the original study is supported in part.
+
 
 ## Unplanned Deviations from the Protocol
 
-*Summarize changes and uncertainties between*
-- your interpretation and plan for the workflow based on reading the paper
-- your final workflow after accessing the data and code and completing the code
+Unfortunately, due to some lack of clarity in the methods of the original study, some deviations were made between the original interpretation of the workflow for this analysis made in collaboration with [Maddie Tango]("MADDIES WEBSITE"), [Steven Montilla]("STEVENS WEBSITE"), [Jackson Mumper]("JACKSONS WEBSITE"), [ARIELLE LANDAU]("ARIELLES WEBSITE"), and [Sanjana Roy]("SANJANAS WEBSITE") and the final workflow created after accessing the code written by Prof. Joseph Holler and Kufre Udoh and the various data used for the project. Three major changes were made between the two iterations of the workflow.
 
-- rescaling 0-5 then 1-5 --> unclear (quintiles, but also 0-5, but thats 6 classes)
-- multiplying capacity by 20 to match original map scale --> why tho (note this was given initially)
-- livelihood senitivity --> had to decide what data went into calculating 4 scores, paper wasnt clear
+First, based off of the original study - which mentioned scores for each category of data in quintile form and in a range of 0-5 - the group decided to follow the more explicit instructions of the original study and scale the scores in each category to 0-5. AFter accessing the data and code, however, this shifted to a range of 1-5 to align with the quintiles, as a range of 0-5 will produce 6 classes, not fitting with the quintiles described in the study.
+
+Second, the final adaptive capacity score calculated using the DHS data was multiplied by a scale of 20 to make scores appear on a scale more similar to the original study, and thus more easily comparable.
+
+Finally, instead of just scaling scores for livelihood sensitivity from 0-5 as assumed in the original workflow, we had to manually calculate these values based off of a broader set of data. As the figures that contributed to each of the 4 categories in this set of data were not clearly enumerated, the group had to make some subjective assessments of what went into these scores based off of what information was available in the original study. This was particularly apparent and difficult when looking at the "disaster coping strategy," defined as livelihood coping strategies that contribute to ecological destruction, a fairly vague descriptor for a large list of potential strategies.
 
 
 ## Discussion
 
-Provide a summary and interpretation of the key findings of the replication *vis-a-vis* the original study results. If the attempt was a failure, discuss possible causes of the failure. In this replication, any failure is probably due to practical causes, which may include:
-- lack of data
-- lack of code
-- lack of details in the original analysis
-- uncertainties due to manner in which data has been used
+Broadly, this reproduction was a success, with similar patterns showing up in both this analysis and the original study. Inland northern areas of Malawi had high adaptive capacity and low vulnerability, the shore of Lake Malawi had low adaptive capacity and  high vulnerability, and the south of the country had lower adaptive capacity but more varied, moderate vulnerability, perhaps indicating a lower incidence of environmental hazards than in other regions, as prevalence of such hazards and low adaptive capacity would otherwise result in high vulnerability. It should be noted that this analysis's vulnerability raster seems to be analyzing at a higher resolution with smaller raster pixels, so patterns appear with more fine-grained definition - large dark red swatches in the map produced in the original study could be smaller dark bands surrounded by moderately vulnerable areas in the reproduction's map.
 
+The fact that in both parts of this analysis, scores were consistently undercounted suggests some sort of significant error in conducting this analysis, either in actually conducting it, or in incorrectly interpreting the original study. For example, the original study, on deeper investigation, seems to imply in some sections - but not in others - that adaptive capacity was first found on a household level, and *then* aggregated, whereas this analysis aggregated data and then calculated adaptive capacity. As adaptive capacity scores are important on their own *and* factor into the final vulnerability, such a misinterpretation could affect the entire analysis, and could be a contributing factor to divergences between the two analyses.
 
+With data being largely satisfactory in quality, and code working consistently without error, the onus of divergence and error in these two analyses may be a result of lack of misinterpretation of the original study. As noted in other sections, Malcomb, et. al.'s, study was marred with lack of clarity and significant contradiction in fairly key segments of the methodology and results, and resulting misinterpretations have the potential to completely throw off a reproduction of this model. The choice between 0-5 and quintile scaling should have been clear, whether scores were calculated and then aggregated or whether data was aggregated and then calculated is crucial to know to both interpret and recreate this study, lack of uncertainty surrounding how scores from 1-5 were even calculated leaves far too much room for subjectivity on the part of reproducers of this model, and multiplying adaptive capacity by 20 to even be able to compare results should not be necessary, although admittedly, this error could be an error on the part of those of us who reproduced this study.
 
 
 ## Conclusion
 
-Restate the key findings and discuss their broader societal implications or contributions to theory.
-Do the research findings suggest a need for any future research?
+In brief, this model found significant lack of capacity for local authorities in much of the country to adapt to climate change and economic and social pressures, and high vulnerability to climate change in equally as large swaths. Important spatial dimensions to both, however - the inland north seems to fair much better than the south, which fares in part better than the lake shore  - imply significant regional disparities in adaptive capacity *and* vulnerability, which can provide authorities to redirect or acquire resources to improve ability to adapt if the model proves to be correct, and could be helpful to identify "problem areas" in other countries if this model is able to be exported. Before this step, however, important uncertainties in how this model was created need to be addressed and clarified, and some attention may need to be given to the subjective way in which some of the variables at play in both analyses were formulated; additional research certainly needs to be conducted on this topic.
+
 
 ## References
 
